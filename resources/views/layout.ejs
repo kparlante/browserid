@@ -12,7 +12,7 @@
   <!--[if lt IE 9]>
     <%- cachify_css('/production/ie8_main.css') %>
   <![endif]-->
-  <link rel="stylesheet" type="text/css" href="/<%= lang %>/OpenSansRegular,OpenSansLight,OpenSansItalic,OpenSansBold/fonts.css">
+  <link rel="stylesheet" type="text/css" href="/<%- commit %>/<%= lang %>/OpenSansRegular,OpenSansLight,OpenSansItalic,OpenSansBold/fonts.css">
   <%- cachify_js(util.format('/production/%s/browserid.js', locale)) %>
   <% /* the title comes from the server when the page is loaded.
          It still needs translated, so wrap it in its own gettext

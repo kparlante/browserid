@@ -32,7 +32,7 @@
     "urlparse": "0.0.1",
     "validator": "0.4.9",
     "winston": "0.6.2",
-    "connect-fonts": "0.0.3"
+    "connect-fonts": "0.0.4"
   },
   "optionalDependencies": {
     "node-statsd": "https://github.com/downloads/lloyd/node-statsd/0509f85.tgz"

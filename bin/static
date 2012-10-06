@@ -108,7 +108,9 @@ app.use(cachify.setup(assets(config.get('supported_languages')),
 app.use(fonts.setup({
   fonts: getRegisteredFonts(),
   language_to_locations: getLanguageToLocations(),
-  url_modifier: cachify.cachify
+  url_modifier: cachify.cachify,
+  etags: true,
+  "cache-control": config.get('use_minified_resources')
 }));
 
 // add 'Access-Control-Allow-Origin' headers to static resources that will be served
