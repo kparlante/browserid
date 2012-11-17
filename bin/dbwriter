@@ -20,7 +20,8 @@ heartbeat = require('../lib/heartbeat.js'),
 logger = require('../lib/logging.js').logger,
 shutdown = require('../lib/shutdown'),
 cachify = require('connect-cachify'),
-assets = require('../lib/static_resources').all;
+assets = require('../lib/static_resources').all,
+toobusy = require('../lib/busy_middleware.js');
 
 // dbwriter needs cachify to properly render emails with cachified URLs,
 // but it serves no cachified content, so it's not necc to register it as
@@ -48,6 +49,8 @@ heartbeat.setup(app, function(cb) {
     cb(!e);
   });
 });
+
+app.use(toobusy);
 
 // logging!  all requests other than __heartbeat__ are logged
 app.use(express.logger({
@@ -106,6 +109,7 @@ wsapi.setup({
 function doShutdown(readyForShutdownCB) {
   require('../lib/bcrypt.js').shutdown();
   db.close(readyForShutdownCB);
+  toobusy.shutdown();
 }
 
 // open the databse

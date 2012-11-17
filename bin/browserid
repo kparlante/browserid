@@ -22,7 +22,8 @@ db = require('../lib/db.js'),
 config = require('../lib/configuration.js'),
 heartbeat = require('../lib/heartbeat.js'),
 logger = require('../lib/logging.js').logger,
-shutdown = require('../lib/shutdown');
+shutdown = require('../lib/shutdown'),
+toobusy = require('../lib/busy_middleware.js');
 
 var app = undefined;
 
@@ -42,6 +43,8 @@ heartbeat.setup(app, function(cb) {
     cb(!e);
   });
 });
+
+app.use(toobusy);
 
 // #2 - logging!  all requests other than __heartbeat__ are logged
 app.use(express.logger({
@@ -130,6 +133,7 @@ db.open(config.get('database'), function (error) {
   shutdown.handleTerminationSignals(app, function(readyForShutdownCB) {
     require('../lib/bcrypt.js').shutdown();
     db.close(readyForShutdownCB);
+    toobusy.shutdown();
   });
 
   var bindTo = config.get('bind_to');
