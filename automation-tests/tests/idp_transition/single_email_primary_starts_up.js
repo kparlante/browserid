@@ -45,8 +45,8 @@ runner.run(module, {
     done();
   },
   "create two secondary users using the domain": function(done) {
-    email1 = 'test1@doesnotexist.testidp.org';
-    email2 = 'test2@doesnotexist.testidp.org';
+    email1 = 'testa@doesnotexist.testidp.org';
+    email2 = 'testb@doesnotexist.testidp.org';
 
     secondary.create({
       email: email1,
@@ -78,7 +78,9 @@ runner.run(module, {
   "enter previously secondary email address": function(done) {
     browser.chain()
       .wtype(CSS['dialog'].emailInput, email1)
-      .wclick(CSS['dialog'].newEmailNextButton, done);
+      .wclick(CSS['dialog'].newEmailNextButton, function() {
+        setTimeout(done, 15000);
+      });
     // XXX: now we should be transitioned to the "this site
     // is now a primary" screen
   }
