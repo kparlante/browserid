@@ -41,3 +41,46 @@ exports.qCreateIdP = function (cb) {
     cb(err, obj);
   });
 };
+
+function putJson(idp, params, api, cb) {
+  put(idp, {json: params}, api, cb);
+}
+function putForm(idp, params, api, cb) {
+  put(idp, {form: params}, api, cb);
+}
+function put(idp, opts, api, cb) {
+  request(_.extend({
+    url: 'https://testidp.org/api/' + idp.domain + '/' + api,
+    method: 'PUT',
+    headers: {
+     'X-Password': idp.password
+    },
+    encoding: 'utf8'
+  }, opts), cb);
+}
+
+exports.CreateIdP = function (idp) {
+  return {
+    putWellKnown: function (wellKnown, cb) {
+      putJson(idp, wellKnown, 'well-known', cb);
+    },
+    putEnv: function (envUrl, cb) {
+      putForm(idp, {env: envUrl}, 'env', cb);
+    },
+    putHeaders: function(name, value, cb) {
+      var headers = {};
+      headers[name] = value;
+      putJson(idp, headers, 'headers', cb);
+    },
+    deleteIdp: function(idp, cb) {
+      request({
+        url: 'https://testidp.org/api/' + idp.domain,
+        method: 'DELETE',
+        headers: {
+         'X-Password': idp.password
+        },
+        encoding: 'utf8'
+      }, cb);
+    }
+  };
+};
