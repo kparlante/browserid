@@ -1,8 +1,10 @@
 const
 personatestuser = require('../lib/personatestuser.js'),
 Q = require('q'),
+request = require('request'),
 restmail = require('../lib/restmail.js'),
 saucePlatforms = require('../config/sauce-platforms.js'),
+testidp = require('./testidp.js'),
 wd = require('wd'),
 path = require('path'),
 _ = require('underscore');
@@ -74,6 +76,7 @@ testSetup.setup = function(opts, cb) {
   var fixtures = {},
     restmails = opts.restmails || opts.r,
     eyedeemails = opts.eyedeemails || opts.e,
+    testidps = opts.testidps || opts.t,
     personatestusers = opts.personatestusers || opts.p,
     browsers = opts.browsers || opts.b,
     promises = [];
@@ -88,6 +91,21 @@ testSetup.setup = function(opts, cb) {
     fixtures.e = fixtures.eyedeemails = [];
     for (var i = 0; i < eyedeemails; i++) {
       fixtures.eyedeemails.push(restmail.randomEmail(10, 'eyedee.me'));
+    }
+  }
+  if (testidps) {
+    fixtures.t = fixtures.testidps = [];
+    for (var i=0; i < testidps; i++) {
+      var userPromise = Q.ncall(testidp.qCreateIdP)
+      .then(function (qRes) {
+        // resp would be 0
+        const BODY = 1;
+        var idp = JSON.parse(qRes[BODY]);
+        var email = restmail.randomEmail(10, idp.domain + '.testidp.org');
+        fixtures.testidps.push({email: email, idp: idp});
+      })
+      .fail(function (error) {return cb(error);});
+      promises.push(userPromise);
     }
   }
   if (personatestusers) {
