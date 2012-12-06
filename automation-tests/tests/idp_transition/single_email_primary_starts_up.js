@@ -66,8 +66,11 @@ runner.run(module, {
     testSetup.newBrowserSession(browser, done);
   },
   "enable primary support on our domain": function(done, el) {
-    // XXX
-    done();
+    testidp.setWellKnown({
+      authentication: '/noauth/auth.html',
+      provisioning: '/noauth/prov.html',
+      "public-key": '<TEST IDP PROVIDED>'
+    }, done);
   },
   "load 123done, spawn dialog, switch to it": function(done) {
     browser.chain()
