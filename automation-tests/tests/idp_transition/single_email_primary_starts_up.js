@@ -45,8 +45,9 @@ runner.run(module, {
     done();
   },
   "create two secondary users using the domain": function(done) {
-    email1 = 'test1@doesnotexist.testidp.org';
-    email2 = 'test2@doesnotexist.testidp.org';
+    var wg = require('../../../lib/secrets').weakGenerate;
+    email1 = wg(8) + '@doesnotexist.testidp.org';
+    email2 = wg(8) + '@doesnotexist.testidp.org';
 
     secondary.create({
       email: email1,
@@ -76,9 +77,11 @@ runner.run(module, {
       .wwin(CSS["persona.org"].windowName, done);
   },
   "enter previously secondary email address": function(done) {
-    broswer.chain()
+    browser.chain()
       .wtype(CSS['dialog'].emailInput, email1)
-      .wclick(CSS['dialog'].newEmailNextButton, done);
+      .wclick(CSS['dialog'].newEmailNextButton, function() {
+        setTimeout(done, 15000);
+      });
     // XXX: now we should be transitioned to the "this site
     // is now a primary" screen
   }

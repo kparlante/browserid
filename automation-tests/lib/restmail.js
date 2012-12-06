@@ -42,7 +42,8 @@ exports.getVerificationLink = function(args, cb) {
         var b = JSON.parse(body);
         var message = b[index];
         if (message && message.headers['x-browserid-verificationurl']) {
-          doneCB(true, error, message.headers['x-browserid-verificationurl'], message);
+          var token = message.headers['x-browserid-verificationurl'].split('token=')[1];
+          doneCB(true, error, token, message.headers['x-browserid-verificationurl'], message);
         }
         else doneCB(false);
       } else {
