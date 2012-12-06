@@ -98,11 +98,7 @@ testSetup.setup = function(opts, cb) {
     for (var i=0; i < testidps; i++) {
       var userPromise = Q.ncall(testidp.qCreateIdP)
       .then(function (qRes) {
-        // resp would be 0
-        const BODY = 1;
-        var idp = JSON.parse(qRes[BODY]);
-        var email = restmail.randomEmail(10, idp.domain + '.testidp.org');
-        fixtures.testidps.push({email: email, idp: idp});
+        fixtures.testidps.push(qRes);
       })
       .fail(function (error) {return cb(error);});
       promises.push(userPromise);

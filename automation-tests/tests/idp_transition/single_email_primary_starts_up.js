@@ -27,27 +27,26 @@ secondary = require('../../../tests/lib/secondary.js');
 wsapi.configuration.browserid = persona_urls.persona;
 
 var browser;
+var testidp;
 
 var email1, email2;
 
 runner.run(module, {
   "setup": function(done) {
-    // XXX: allocate a testidp domain here
-    testSetup.setup({browsers: 1}, function(err, fixtures) {
+    testSetup.setup({browsers: 1, testidps: 1}, function(err, fixtures) {
       if (fixtures) {
         browser = fixtures.browsers[0];
+        testidp = fixtures.testidps[0];
       }
       done(err);
     });
   },
   "disable idp so we can create secondary users": function(done) {
-    // XXX
-    done();
+    testidp.setWellKnown("", done);
   },
   "create two secondary users using the domain": function(done) {
-    var wg = require('../../../lib/secrets').weakGenerate;
-    email1 = wg(8) + '@doesnotexist.testidp.org';
-    email2 = wg(8) + '@doesnotexist.testidp.org';
+    email1 = testidp.getRandomEmail();
+    email2 = testidp.getRandomEmail();
 
     secondary.create({
       email: email1,
