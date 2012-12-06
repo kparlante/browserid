@@ -34,7 +34,7 @@ exports.getVerificationLink = function(args, cb) {
   var timeout = args.timeout || DEFAULT_TIMEOUT;
   var email = args.email;
   var index = args.index || 0;
-  var url = 'http://restmail.net/mail/' + email.split('@')[0];
+  var url = 'http://restmail.net/mail/' + email;
 
   utils.waitFor(poll, timeout, function(doneCB) {
     request(url, function (error, response, body) {
