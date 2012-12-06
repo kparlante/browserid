@@ -76,7 +76,7 @@ runner.run(module, {
       .wwin(CSS["persona.org"].windowName, done);
   },
   "enter previously secondary email address": function(done) {
-    broswer.chain()
+    browser.chain()
       .wtype(CSS['dialog'].emailInput, email1)
       .wclick(CSS['dialog'].newEmailNextButton, done);
     // XXX: now we should be transitioned to the "this site
