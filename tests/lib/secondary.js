@@ -20,8 +20,8 @@ exports.create = function(opts, cb) {
       opts.fetchVerificationLinkCallback = start_stop.waitForToken;
     }
 
-    opts.fetchVerificationLinkCallback(opts.email, function(t) {
-      if (typeof t !== 'string') return cb("no token");
+    opts.fetchVerificationLinkCallback(opts.email, function(err, t) {
+      if (err) return cb("no verification token could be fetched: " + err);
       wcli.post(wsapi.configuration, '/wsapi/complete_user_creation', wsapi.context, {
         token: t
       }, cb);

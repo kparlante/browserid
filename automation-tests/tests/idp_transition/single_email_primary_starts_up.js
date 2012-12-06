@@ -53,6 +53,7 @@ runner.run(module, {
       password: 'password',
       fetchVerificationLinkCallback: restmail.getVerificationLink
     }, function(err) {
+      console.log(err);
       if (err) return done(err);
       secondary.create({
         email: email2,
