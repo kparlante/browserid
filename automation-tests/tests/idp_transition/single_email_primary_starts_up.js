@@ -53,7 +53,6 @@ runner.run(module, {
       password: 'password',
       fetchVerificationLinkCallback: restmail.getVerificationLink
     }, function(err) {
-      console.log(err);
       if (err) return done(err);
       secondary.create({
         email: email2,
@@ -63,7 +62,6 @@ runner.run(module, {
     });
 
   },
-/*
   "create a new selenium session": function(done) {
     testSetup.newBrowserSession(browser, done);
   },
@@ -74,17 +72,16 @@ runner.run(module, {
   "load 123done, spawn dialog, switch to it": function(done) {
     browser.chain()
       .get(persona_urls["123done"])
-      .wclick(CSS['123done.org'].signinButton, done)
+      .wclick(CSS['123done.org'].signinButton)
       .wwin(CSS["persona.org"].windowName, done);
   },
   "enter previously secondary email address": function(done) {
     broswer.chain()
-      .wtype(CSS['dialog'].emailInput, opts.email)
-      .wclick(CSS['dialog'].newEmailNextButton);
+      .wtype(CSS['dialog'].emailInput, email1)
+      .wclick(CSS['dialog'].newEmailNextButton, done);
     // XXX: now we should be transitioned to the "this site
     // is now a primary" screen
-  },
-*/
+  }
 },
 {
   suiteName: path.basename(__filename),
