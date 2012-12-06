@@ -13,8 +13,18 @@ persona_urls = require('../../lib/urls.js'),
 CSS = require('../../pages/css.js'),
 dialog = require('../../pages/dialog.js'),
 runner = require('../../lib/runner.js'),
-userMaker = require('../../lib/user_maker.js'),
-testSetup = require('../../lib/test-setup.js');
+testSetup = require('../../lib/test-setup.js'),
+// we use the WSAPI directly to create secondary users, as
+// this test is focused on transition, and not user
+// creation
+// XXX: automation tests and api tests now share code, we should
+// restructure.
+wsapi = require('../../../tests/lib/wsapi.js'),
+// tools for creating "secondary" users
+secondary = require('../../../tests/lib/secondary.js');
+
+// ensure that utilty libraries are using the proper server
+wsapi.configuration.browserid = persona_urls.persona;
 
 var browser;
 
@@ -38,18 +48,21 @@ runner.run(module, {
     email1 = 'test1@doesnotexist.testidp.org';
     email2 = 'test2@doesnotexist.testidp.org';
 
-    userMaker({
+    secondary.create({
       email: email1,
-      password: 'password'
+      password: 'password',
+      fetchVerificationLinkCallback: restmail.getVerificationLink
     }, function(err) {
       if (err) return done(err);
-      userMaker({
+      secondary.create({
         email: email2,
-        password: 'password'
+        password: 'password',
+        fetchVerificationLinkCallback: restmail.getVerificationLink
       }, done);
     });
 
   },
+/*
   "create a new selenium session": function(done) {
     testSetup.newBrowserSession(browser, done);
   },
@@ -70,6 +83,7 @@ runner.run(module, {
     // XXX: now we should be transitioned to the "this site
     // is now a primary" screen
   },
+*/
 },
 {
   suiteName: path.basename(__filename),

@@ -21,7 +21,10 @@ process.on('exit', function () {
 var nextTokenFunction = undefined;
 var tokenStack = [];
 
-exports.waitForToken = function(cb) {
+exports.waitForToken = function(email, cb) {
+  // allow first argument to be omitted
+  if (typeof email === 'function') cb = email;
+
   if (tokenStack.length) {
     var t = tokenStack.shift();
     process.nextTick(function() { cb(t); });

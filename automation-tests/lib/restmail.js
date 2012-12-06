@@ -24,6 +24,12 @@ exports.randomEmail = function(chars, domain) {
 // and .email (required)
 // callback is cb(error, verificationURL, fullEmail)
 exports.getVerificationLink = function(args, cb) {
+  // allow first argument to be an email address, which
+  // is the only required argument
+  if (typeof args === 'string') args = { email: args };
+
+  if (!args.email) throw "missing required email address";
+
   var poll = args.poll || DEFAULT_POLL;
   var timeout = args.timeout || DEFAULT_TIMEOUT;
   var email = args.email;

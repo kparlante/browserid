@@ -16,9 +16,13 @@ exports.create = function(opts, cb) {
     site:  opts.site
   }, function(err, r) {
     if (err) return cb("cannot stage: " + err);
-    start_stop.waitForToken(function(t) {
+    if (!opts.fetchVerificationLinkCallback) {
+      opts.fetchVerificationLinkCallback = start_stop.waitForToken;
+    }
+
+    opts.fetchVerificationLinkCallback(opts.email, function(t) {
       if (typeof t !== 'string') return cb("no token");
-      wcli.post(wsapi.configuration, '/wsapi/complete_user_creation', wsapi.context, {      
+      wcli.post(wsapi.configuration, '/wsapi/complete_user_creation', wsapi.context, {
         token: t
       }, cb);
     });
