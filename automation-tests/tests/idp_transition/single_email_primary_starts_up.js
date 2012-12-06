@@ -45,8 +45,9 @@ runner.run(module, {
     done();
   },
   "create two secondary users using the domain": function(done) {
-    email1 = 'testa@doesnotexist.testidp.org';
-    email2 = 'testb@doesnotexist.testidp.org';
+    var wg = require('../../../lib/secrets').weakGenerate;
+    email1 = wg(8) + '@doesnotexist.testidp.org';
+    email2 = wg(8) + '@doesnotexist.testidp.org';
 
     secondary.create({
       email: email1,
