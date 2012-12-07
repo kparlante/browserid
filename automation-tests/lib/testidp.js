@@ -18,6 +18,8 @@ exports.qCreateIdP = function (cb) {
       return restmail.randomEmail(10, this.idp.domain + '.testidp.org');
     };
 
+    obj.addPublicKey = module.exports.addPublicKey;
+
     // setWellKnown() - set the well-known document for the domain
     obj.setWellKnown = function(document, cb) {
       if (typeof document === 'object') document = JSON.stringify(document, null, 3);
@@ -61,18 +63,37 @@ function put(idp, opts, api, cb) {
 
 exports.CreateIdP = function (idp) {
   return {
-    putWellKnown: function (wellKnown, cb) {
+    /**
+     * @param {object} wellKnown
+     * @param {boolean} addGoodKey - public-key field will be populated
+     *                  with actual keypair
+     * @param {function} cb - request compatible callback
+     */
+    putWellKnown: function (wellKnown, addGoodKey, cb) {
+      if (addGoodKey) module.exports.addPublicKey(wellKnown);
       putJson(idp, wellKnown, 'well-known', cb);
     },
+    /**
+     * @param {object} envUrl - Must start with http and end with /
+     * @param {function} cb - request compatible callback
+     */
     putEnv: function (envUrl, cb) {
       putForm(idp, {env: envUrl}, 'env', cb);
     },
+    /**
+     * @param {string} name
+     * @param {string} value
+     * @param {function} cb - request compatible callback
+     */
     putHeaders: function(name, value, cb) {
       var headers = {};
       headers[name] = value;
       putJson(idp, headers, 'headers', cb);
     },
-    deleteIdp: function(idp, cb) {
+    /**
+     * @param {function} cb - request compatible callback
+     */
+    deleteIdp: function(cb) {
       request({
         url: 'https://testidp.org/api/' + idp.domain,
         method: 'DELETE',
@@ -83,4 +104,14 @@ exports.CreateIdP = function (idp) {
       }, cb);
     }
   };
+};
+
+/**
+ * @param {object}
+ * @return updated wellKnown - provided for chaining, object gets
+ *                 updated either way
+ */
+exports.addPublicKey = function (wellKnown) {
+  wellKnown['public-key'] = '<TEST IDP PROVIDED>';
+  return wellKnown;
 };

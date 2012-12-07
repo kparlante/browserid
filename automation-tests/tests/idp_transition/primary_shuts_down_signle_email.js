@@ -22,9 +22,8 @@ runner.run(module, {
     testSetup.setup({browsers: 1, testidps: 1}, function(err, fixtures) {
       if (fixtures) {
         browser = fixtures.browsers[0];
-        testUser = fixtures.testidps[0].email;
-        // testIdp {domain, password}
-        testIdp = fixtures.testidps[0].idp;
+        testIdp = fixtures.testidps[0];
+        testUser = testIdp.getRandomEmail();
       }
       done(err);
     });
@@ -40,6 +39,8 @@ runner.run(module, {
   },
   "switch to the dialog when it opens": function(done) {
     browser.wwin(CSS["persona.org"].windowName, done);
+    console.log(testIdp);
+    console.log(testUser);
   }
 },
 {
