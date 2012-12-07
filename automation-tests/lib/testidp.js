@@ -1,4 +1,5 @@
-var request = require('request'),
+var _ = require('underscore'),
+    request = require('request'),
     restmail = require('./restmail.js');
 
 const TESTIDP_API = 'https://testidp.org/api/';
@@ -61,6 +62,11 @@ function put(idp, opts, api, cb) {
   }, opts), cb);
 }
 
+const NO_AUTH = exports.NO_AUTH = {
+  "authentication": "/noauth/auth.html",
+  "provisioning": "/noauth/prov.html"
+};
+
 exports.CreateIdP = function (idp) {
   return {
     /**
@@ -102,7 +108,8 @@ exports.CreateIdP = function (idp) {
         },
         encoding: 'utf8'
       }, cb);
-    }
+    },
+    getNoAuth: function () { return NO_AUTH; }
   };
 };
 

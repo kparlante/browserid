@@ -11,6 +11,7 @@ restmail = require('../../lib/restmail.js'),
 utils = require('../../lib/utils.js'),
 persona_urls = require('../../lib/urls.js'),
 CSS = require('../../pages/css.js'),
+CreateIdP = require('../../lib/testidp.js').CreateIdP,
 dialog = require('../../pages/dialog.js'),
 runner = require('../../lib/runner.js'),
 testSetup = require('../../lib/test-setup.js');
@@ -22,8 +23,9 @@ runner.run(module, {
     testSetup.setup({browsers: 1, testidps: 1}, function(err, fixtures) {
       if (fixtures) {
         browser = fixtures.browsers[0];
-        testIdp = fixtures.testidps[0];
-        testUser = testIdp.getRandomEmail();
+        var llIdP = fixtures.testidps[0];
+        testIdp = new CreateIdP(llIdP.idp);
+        testUser = llIdP.getRandomEmail();
       }
       done(err);
     });
@@ -41,6 +43,9 @@ runner.run(module, {
     browser.wwin(CSS["persona.org"].windowName, done);
     console.log(testIdp);
     console.log(testUser);
+  },
+  "Happy, healthy primary": function (done) {
+    testIdp.putWellKnown(testIdp.getNoAuth, true, done);
   }
 },
 {
