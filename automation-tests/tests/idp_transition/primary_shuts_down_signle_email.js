@@ -45,7 +45,7 @@ runner.run(module, {
     console.log(testUser);
   },
   "Happy, healthy primary": function (done) {
-    testIdp.putWellKnown(testIdp.getNoAuth, true, done);
+    testIdp.putWellKnown(testIdp.getNoAuth(), true, done);
   }
 },
 {
