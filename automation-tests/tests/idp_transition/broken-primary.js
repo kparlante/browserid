@@ -37,10 +37,17 @@ runner.run(module, {
   "create a new selenium session": function(done) {
     testSetup.newBrowserSession(browser, done);
   },
+  "enable primary support behind a click": function(done) {
+    testidp.setWellKnown({
+      authentication: '/click/auth.html',
+      provisioning: '/click/prov.html',
+      "public-key": '<TEST IDP PROVIDED>'
+    }, done);
+  },
   //
   // First let's test the case where a user is authenticated to persona, they
-  // have an email address that is a secondary address, and their email provider
-  // turn on persona support.
+  // have an email address that is a secondary address, and their email
+  // provider turn on persona support.
   //
   "authenticate to persona for the first time with a primary email address": function(done) {
     console.log(testidp.email);
