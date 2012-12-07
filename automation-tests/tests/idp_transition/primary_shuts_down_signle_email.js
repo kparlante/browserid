@@ -41,11 +41,16 @@ runner.run(module, {
   },
   "switch to the dialog when it opens": function(done) {
     browser.wwin(CSS["persona.org"].windowName, done);
-    console.log(testIdp);
-    console.log(testUser);
   },
   "Happy, healthy primary": function (done) {
-    testIdp.putWellKnown(testIdp.getNoAuth(), true, done);
+    testIdp.putWellKnown(testIdp.getNoAuth(), true, function (err, resp, body) {
+      testIdp.putEnv(persona_urls['persona'] + '/', done);
+    });
+  },
+  "Sign in": function (done) {
+    browser.chain({onError: done})
+      .wtype(CSS['dialog'].emailInput, testUser)
+      .wclick(CSS['dialog'].newEmailNextButton, done);
   }
 },
 {
