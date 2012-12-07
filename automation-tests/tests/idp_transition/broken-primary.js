@@ -74,7 +74,14 @@ runner.run(module, {
       .wclick(CSS['123done.org'].logoutLink)
       .wclick(CSS['123done.org'].signinButton)
       .wwin(CSS["persona.org"].windowName)
-      .wclick(CSS['dialog'].returningUserButton, done);
+      .wclick(CSS['dialog'].signInButton, done);
+  },
+  "click cancel once broken primary message is displayed": function(done) {
+    browser.chain()
+      // primary is broken displayed!
+      .wclick(CSS['dialog'].primaryOfflineCancel)
+      // verify cancel button returns us to the email login screen
+      .wfind(CSS['dialog'].emailInput, done);
   }
 },
 {
