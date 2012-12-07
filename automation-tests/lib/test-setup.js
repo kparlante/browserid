@@ -7,12 +7,19 @@ saucePlatforms = require('../config/sauce-platforms.js'),
 testidp = require('./testidp.js'),
 wd = require('wd'),
 path = require('path'),
-_ = require('underscore');
+_ = require('underscore'),
+persona_urls = require('./urls.js');
 
 require('./wd-extensions.js');
 
 var testSetup = {};
 
+// as part of test setup, configure wsapi_client to use the proper environment,
+// this way, any code which wants to programatically interact with the
+// (internal) browserid HTTP API via libraries under tests/lib will be able
+// to do so.
+wsapi = require('../../tests/lib/wsapi.js'),
+wsapi.configuration.browserid = persona_urls.persona;
 
 /* public API */
 

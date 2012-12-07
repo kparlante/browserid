@@ -1,12 +1,18 @@
 var _ = require('underscore'),
     request = require('request'),
     restmail = require('./restmail.js');
+    URLS = require('./urls');
 
 const TESTIDP_API = 'https://testidp.org/api/';
 
 // Compatible with Q.ncall
 exports.qCreateIdP = function (cb) {
-  request(TESTIDP_API + 'domain', function(err, response, body) {
+  request({
+    url: TESTIDP_API + 'domain',
+    qs: {
+      env: URLS['persona']
+    }
+  }, function(err, response, body) {
     if (err) return cb(err);
 
     // resp would be 0
