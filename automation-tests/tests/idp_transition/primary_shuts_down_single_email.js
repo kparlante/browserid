@@ -5,16 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const
-path = require('path'),
-assert = require('../../lib/asserts.js'),
-restmail = require('../../lib/restmail.js'),
-utils = require('../../lib/utils.js'),
-persona_urls = require('../../lib/urls.js'),
 CSS = require('../../pages/css.js'),
 CreateIdP = require('../../lib/testidp.js').CreateIdP,
 dialog = require('../../pages/dialog.js'),
+path = require('path'),
+assert = require('../../lib/asserts.js'),
+persona_urls = require('../../lib/urls.js'),
+restmail = require('../../lib/restmail.js'),
 runner = require('../../lib/runner.js'),
-testSetup = require('../../lib/test-setup.js');
+testSetup = require('../../lib/test-setup.js'),
+timeouts = require('../../lib/timeouts.js'),
+utils = require('../../lib/utils.js');
 
 var browser, testUser, testIdp;
 
@@ -42,15 +43,25 @@ runner.run(module, {
   "switch to the dialog when it opens": function(done) {
     browser.wwin(CSS["persona.org"].windowName, done);
   },
-  "Happy, healthy primary": function (done) {
-    testIdp.putWellKnown(testIdp.getNoAuth(), true, function (err, resp, body) {
+  "Happy, healthy primary": function(done) {
+    testIdp.putWellKnown(testIdp.getNoAuth(), true, function(err, resp, body) {
       testIdp.putEnv(persona_urls['persona'] + '/', done);
     });
   },
-  "Sign in": function (done) {
+  "Sign in": function(done) {
     browser.chain({onError: done})
       .wtype(CSS['dialog'].emailInput, testUser)
       .wclick(CSS['dialog'].newEmailNextButton, done);
+  },
+  "verify we're signed in to 123done": function(done) {
+    browser.chain({onError: done})
+      .wwin()
+      .wtext(CSS['123done.org'].currentlyLoggedInEmail, function(err, text) {
+        done(err || assert.equal(text, testUser.email));
+       });
+  },
+  "that will do pig": function (done) {
+    setTimeout(done, 15000);
   }
 },
 {

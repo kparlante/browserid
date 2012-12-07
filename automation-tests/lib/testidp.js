@@ -1,6 +1,6 @@
 var _ = require('underscore'),
     request = require('request'),
-    restmail = require('./restmail.js'),
+    restmail = require('./restmail.js');
     URLS = require('./urls');
 
 const TESTIDP_API = 'https://testidp.org/api/';
