@@ -80,7 +80,27 @@ runner.run(module, {
     browser.chain()
       // primary is broken displayed!
       .wclick(CSS['dialog'].primaryOfflineCancel)
-      // verify cancel button returns us to the email login screen
+      // verify cancel button returns us to the sign-in screen
+      .wfind(CSS['dialog'].signInButton, done);
+  },
+  "log out of persona and close dialog": function(done) {
+    browser.chain()
+      .wclick(CSS["dialog"].thisIsNotMe)
+      .wfind(CSS["dialog"].emailInput)
+      .closeCurrentBrowserWindow(done);
+  },
+  "spawn the dialog again and try to log in un-authed with address": function(done) {
+    browser.chain()
+      .wclick(CSS['123done.org'].signinButton)
+      .wwin(CSS["persona.org"].windowName)
+      .wtype(CSS['dialog'].emailInput, testidp.email)
+      .wclick(CSS['dialog'].newEmailNextButton, done);
+  },
+  "verify canceled screen is displayed and functions": function(done) {
+    browser.chain()
+    // primary is broken displayed!
+      .wclick(CSS['dialog'].primaryOfflineCancel)
+      // verify cancel button returns us to the initial screen
       .wfind(CSS['dialog'].emailInput, done);
   }
 },
