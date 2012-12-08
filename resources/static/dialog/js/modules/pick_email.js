@@ -61,8 +61,10 @@ BrowserID.Modules.PickEmail = (function() {
     var record = checkEmail.call(self, email);
     if (!! record) {
       dialogHelpers.refreshEmailInfo.call(self, email, function (info) {
-	record = checkEmail.call(self, email);
-        if (record.cert)
+        record = checkEmail.call(self, email);
+        if ("offline" == info.state)
+          self.close("primary_offline", info);
+        else if (record.cert)
           self.close("email_chosen", info);
         else if ("transition_no_password" === info.state)
           self.close("transition_no_password", info);
