@@ -27,6 +27,7 @@ runner.run(module, {
         var llIdP = fixtures.testidps[0];
         testIdp = new CreateIdP(llIdP.idp);
         testUser = llIdP.getRandomEmail();
+        noAuthTestUser = llIdP.getRandomEmail();
       }
       done(err);
     });
@@ -57,11 +58,33 @@ runner.run(module, {
     browser.chain({onError: done})
       .wwin()
       .wtext(CSS['123done.org'].currentlyLoggedInEmail, function(err, text) {
-        done(err || assert.equal(text, testUser.email));
+        done(err || assert.equal(text, testUser));
        });
   },
-  "that will do pig": function (done) {
-    setTimeout(done, 15000);
+  "The IdP disables support": function (done) {
+    testIdp.putWellKnown({disabled: true}, false, done);
+  },
+  "Authed user tries to log in": function (done) {
+    browser.chain({onError: done})
+      .wclick(CSS['123done.org'].logoutLink)
+      .wclick(CSS['123done.org'].signinButton, done)
+      .wwin(CSS['dialog'].windowName)
+      .wclick(CSS['dialog'].signInButton, done);
+    // TODO We should see disabled flow
+  },
+  "Log out of the dialog": function (done) {
+    browser.chain({onError: done})
+      .wclick('#cancel')
+      .wclick(CSS['dialog'].thisIsNotMe, done)
+  },
+  "No Auth user tries to log in": function (done) {
+    browser.chain({onError: done})
+      .wtype(CSS['dialog'].emailInput, noAuthTestUser)
+      .wclick(CSS['dialog'].newEmailNextButton)
+      // TODO use restmail to confirm (?)
+      .wtype(CSS['dialog'].choosePassword, 'password')
+      .wtype(CSS['dialog'].verifyPassword, 'password')
+      .wclick(CSS['dialog'].createUserButton, done);
   }
 },
 {
